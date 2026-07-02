@@ -8,21 +8,18 @@ const reviews = [
     location: 'India',
     rating: 5,
     comment: 'We stay in this hotel one day... its really a nice place... the  most special thing in this hotel is they having indoor mini theatre with the seating capacity of 20 pax..  its located at the entrance of the valparai... hotel is well maintained... staff mr. Arun and Dharshan are very kind and helpful... rooms are very clean... they having big LED TV in all rooms...  in top floor they having well equipped Gym, those are staying there make use of it... then some indoor games like chess and carrom also there... they arrange home made food on behalf of our request... food is delicious both veg and non veg...  they are arranging night safari to see wild animals... its extra cost...',
-    image: 'https://images.unsplash.com/photo-1727394943460-4afc341e2dae?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxoYXBweSUyMGhvdGVsJTIwZ3Vlc3QlMjB3b21hbnxlbnwxfHx8fDE3ODI3MjUzNzR8MA&ixlib=rb-4.1.0&q=80&w=1080',
   },
   {
     name: 'Santhosh Varghese',
     location: 'Mumbai, India',
     rating: 4,
     comment: 'A hotel with great ambiance..well maintained high quality rooms and fittings.very much reasonable price when booked via app. If needed they will get you home made food if told in advance.. Very much accessible.. The speciality is their dining space and bar counter..which we were allowed to use... Not a quiet place as it is on the road side..but a.very good place..I will definitely suggest this to anyone..',
-    image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMG1hbiUyMHBvcnRyYWl0fGVufDF8fHx8MTc4MjcyNTM3NHww&ixlib=rb-4.1.0&q=80&w=1080',
   },
   {
     name: 'Sivakumar Balasubramanian',
     location: 'London, India',
     rating: 5,
     comment: 'Good cozy rooms in the entrance of valparai Town, At the first floor of Suzuki Two wheeler Show Room, Stayed on 13,14th of Oct 19, Luckily we are the only guest in a approx 12 room Hotel.So parking no issues, Chandru the guy is all in all for room service and reception maintenance and sourcing food from outside amazing.Car parking no issues since we are the only guest food outsourced from laxmi chettinad mess south indian style spicy food, Tea shop are in walkable distance, city centre approx 2 km from this hotel.',
-    image: 'https://images.unsplash.com/photo-1662850886700-4ec19bd30d11?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzbWlsaW5nJTIwd29tYW4lMjBwb3J0cmFpdHxlbnwxfHx8fDE3ODI3MTY4MzF8MA&ixlib=rb-4.1.0&q=80&w=1080',
   },
 ];
 
@@ -173,22 +170,9 @@ function ReviewCard({ review, index, currentIndex, totalReviews, isInView }: Rev
         </p>
 
         {/* Author */}
-        <div className="flex items-center justify-center gap-4">
-          <motion.div
-            className="relative w-16 h-16 rounded-full overflow-hidden"
-            whileHover={{ scale: 1.1 }}
-          >
-            <img
-              src={review.image}
-              alt={review.name}
-              className="w-full h-full object-cover"
-            />
-          </motion.div>
-
-          <div className="text-left">
-            <h4 className="text-lg text-[#234F2A]">{review.name}</h4>
-            <p className="text-sm text-[#111111]/60">{review.location}</p>
-          </div>
+        <div className="text-center">
+          <h4 className="text-lg text-[#234F2A]">{review.name}</h4>
+          <p className="text-sm text-[#111111]/60">{review.location}</p>
         </div>
       </div>
     </motion.div>

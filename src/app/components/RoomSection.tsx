@@ -8,23 +8,23 @@ const rooms = [
     id: 1,
     name: 'Super Deluxe AC Room',
     image: 'https://pix8.agoda.net/property/56103951/873551559/4bebb26a8f4d9a6e1366de7edae20bb1.jpeg?ce=0&s=1024x',
-    price: '₹8,999',
+    price: '₹3,000-₹3,500',
     features: ['Mountain View', 'King Bed', 'Wi-Fi', 'AC'],
     description: 'Elegant room with stunning mountain views',
   },
   {
     id: 2,
-    name: 'Entire 8-Bed Private Dormitory - Mixed',
+    name: 'Standard Non-AC',
     image: 'https://pix8.agoda.net/hotelImages/216/2167387/2167387_17062919170054166122.jpg?ca=6&ce=1&s=1024x',
-    price: '₹12,999',
-    features: ['Private Balcony', 'Jacuzzi', 'Mini Bar', 'AC'],
+    price: '₹2,635',
+    features: ['Private Balcony', 'Jacuzzi', 'Fitness Center', '24-hot water'],
     description: 'Spacious suite with premium amenities',
   },
   {
     id: 3,
-    name: 'Deluxe Room (Super, air conditioner)',
+    name: 'Deluxe Non-AC',
     image: 'https://pix8.agoda.net/property/56103951/873551559/116b091983eca43e133b03c88abcc2d7.jpeg?ce=0&s=1024x',
-    price: '₹18,999',
+    price: '₹2,800,₹3,000',
     features: ['2 Bedrooms', 'Private Garden', 'Butler Service', 'Kitchen'],
     description: 'Ultimate luxury villa experience',
   },
@@ -113,7 +113,7 @@ function RoomCard({ room, index, isInView }: RoomCardProps) {
             whileHover={{ scale: 1.1, rotate: 2 }}
             transition={{ duration: 0.6 }}
           />
-          
+
           {/* Hover Overlay */}
           <motion.div
             className="absolute inset-0 bg-gradient-to-t from-[#234F2A]/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6"
@@ -145,20 +145,16 @@ function RoomCard({ room, index, isInView }: RoomCardProps) {
               <p className="text-2xl text-[#234F2A]">{room.price}</p>
             </div>
 
-            <motion.div
-              initial={{ opacity: 0, x: -10 }}
-              whileHover={{ opacity: 1, x: 0 }}
-              className="opacity-0 group-hover:opacity-100 transition-opacity"
-            >
+            <div className="opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300">
               <Button
-                className="bg-[#D4AF37] text-[#111111] hover:bg-[#D4AF37]/90 rounded-[18px]"
-                style={{
-                  boxShadow: '0 4px 20px rgba(212, 175, 55, 0.3)',
+                onClick={() => {
+                  document.getElementById('booking')?.scrollIntoView({ behavior: 'smooth' });
                 }}
+                className="bg-[#234F2A] hover:bg-[#D4AF37] text-white hover:text-black rounded-[18px] transition-all duration-300 font-semibold shadow-md"
               >
                 Book Now
               </Button>
-            </motion.div>
+            </div>
           </div>
         </div>
 

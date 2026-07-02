@@ -1,57 +1,110 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { motion, useScroll, useTransform } from 'motion/react';
+import gsap from 'gsap';
 import { Button } from './ui/button';
 import { ChevronDown } from 'lucide-react';
 
 const TITLE = "Tall Tree Nest";
 const SUBTITLE = "Luxury Stay in Valparai";
 
+function TeaLeaf({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 100 100" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M10 80 C 30 75, 45 55, 60 50 C 75 45, 90 40, 95 30 C 85 45, 65 50, 50 60 C 35 70, 20 80, 10 80 Z"
+        fill="#5D8C58"
+        fillOpacity="0.35"
+      />
+      <path
+        d="M10 80 Q 52.5 55 95 30"
+        stroke="#234F2A"
+        strokeWidth="1.5"
+        strokeOpacity="0.3"
+      />
+      <path
+        d="M30 68 Q 38 65 42 66"
+        stroke="#234F2A"
+        strokeWidth="1"
+        strokeOpacity="0.25"
+      />
+      <path
+        d="M50 56 Q 58 53 62 54"
+        stroke="#234F2A"
+        strokeWidth="1"
+        strokeOpacity="0.25"
+      />
+    </svg>
+  );
+}
+
 const leafClusters = [
-  {
-    id: 'leaves-1',
-    left: '8%',
-    bottom: '12%',
-    width: 180,
-    height: 120,
-    delay: 0.2,
-    duration: 14,
-    x: 2.2,
-    y: 1.6,
-    rotate: 2.2,
-  },
-  {
-    id: 'leaves-2',
-    left: '70%',
-    bottom: '8%',
-    width: 210,
-    height: 140,
-    delay: 1.1,
-    duration: 16,
-    x: 2.8,
-    y: 2.1,
-    rotate: 2.8,
-  },
-  {
-    id: 'leaves-3',
-    left: '50%',
-    bottom: '22%',
-    width: 160,
-    height: 100,
-    delay: 0.7,
-    duration: 13,
-    x: 1.8,
-    y: 1.4,
-    rotate: 1.8,
-  },
+  { id: 'leaves-1', left: '7%', top: '25%', width: '130px', rotation: 25 },
+  { id: 'leaves-2', left: '80%', top: '20%', width: '150px', rotation: -30 },
+  { id: 'leaves-3', left: '72%', top: '65%', width: '110px', rotation: 45 },
+  { id: 'leaves-4', left: '12%', top: '70%', width: '140px', rotation: -15 },
 ];
 
 export function HeroSection() {
   const sectionRef = useRef<HTMLElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const subtitleOuterRef = useRef<HTMLDivElement>(null);
+  const ctaOuterRef = useRef<HTMLDivElement>(null);
+  const leavesContainerRef = useRef<HTMLDivElement>(null);
+
   const { scrollY } = useScroll();
-  const contentOpacity = useTransform(scrollY, [0, 380], [1, 0]);
-  const contentY = useTransform(scrollY, [0, 380], [0, -38]);
-  const leafScrollY = useTransform(scrollY, [0, 520], [0, -22]);
-  const leafOpacity = useTransform(scrollY, [0, 520], [1, 0.94]);
+  const contentOpacity = useTransform(scrollY, [0, 400], [1, 0]);
+  const contentY = useTransform(scrollY, [0, 400], [0, -40]);
+  const leafScrollY = useTransform(scrollY, [0, 600], [0, -30]);
+
+  useEffect(() => {
+    // Initial entry animations via GSAP
+    const tl = gsap.timeline({ defaults: { ease: 'power4.out' } });
+
+    // Stagger character animations
+    if (titleRef.current) {
+      const chars = titleRef.current.querySelectorAll('.char-span');
+      tl.to(chars, {
+        opacity: 1,
+        y: 0,
+        rotateX: 0,
+        stagger: 0.05,
+        duration: 0.8,
+        delay: 0.3,
+      });
+    }
+
+    if (subtitleOuterRef.current) {
+      tl.to(subtitleOuterRef.current, {
+        y: 0,
+        opacity: 1,
+        duration: 0.7,
+      }, '-=0.4');
+    }
+
+    if (ctaOuterRef.current) {
+      tl.to(ctaOuterRef.current, {
+        y: 0,
+        opacity: 1,
+        duration: 0.7,
+      }, '-=0.5');
+    }
+
+    // GSAP slow leaves floating motion loops
+    if (leavesContainerRef.current) {
+      const items = leavesContainerRef.current.children;
+      Array.from(items).forEach((item, index) => {
+        gsap.to(item, {
+          y: '+=20',
+          x: index % 2 === 0 ? '+=12' : '-=12',
+          rotation: index % 2 === 0 ? '+=12' : '-=12',
+          duration: 4.5 + index * 1.5,
+          repeat: -1,
+          yoyo: true,
+          ease: 'sine.inOut'
+        });
+      });
+    }
+  }, []);
 
   const scrollToSection = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
@@ -59,191 +112,150 @@ export function HeroSection() {
 
   return (
     <section id="hero" ref={sectionRef} className="relative h-screen overflow-hidden">
-      {/* Layer 1 — Background image remains static and unchanged */}
-      <div className="absolute inset-0">
-        <img
-          src="https://images.unsplash.com/photo-1686135899613-0db585a1714c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx0ZWElMjBwbGFudGF0aW9uJTIwdmFscGFyYWklMjBtb3VudGFpbnN8ZW58MXx8fHwxNzgyNzI1MzY2fDA&ixlib=rb-4.1.0&q=80&w=1080"
-          alt="Tea Estate Mountains"
+
+      {/* Background Image - Ken Burns Zoom Effect */}
+      <div className="absolute inset-0 overflow-hidden bg-black">
+        <motion.img
+          src="/image/forest.jpeg"
+          alt="Tall Tree Nest Forest View"
           className="w-full h-full object-cover"
-          data-cursor-image="1"
+          style={{
+            willChange: 'transform',
+            objectPosition: 'center',
+            filter: 'brightness(1.25) contrast(1.08) saturate(1.22)',
+            WebkitFilter: 'brightness(1.25) contrast(1.08) saturate(1.22)',
+          }}
+          animate={{
+            scale: [1, 1.06, 1],
+          }}
+          transition={{
+            duration: 22,
+            repeat: Infinity,
+            ease: 'linear',
+          }}
         />
       </div>
 
-      {/* Layer 2 — Soft dark gradient over the hero, static camera only */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/25 to-black/72" />
+      {/* Light Black Overlay (25%) only to improve text readability */}
+      <div className="absolute inset-0 bg-black/25 z-10" />
 
-      {/* Layer 3 — Gentle fog wash */}
-      <motion.div
-        className="absolute inset-0 pointer-events-none"
-        style={{ background: 'linear-gradient(to top, rgba(255,255,255,0.06) 0%, transparent 60%)' }}
-      >
+      {/* Elegant Fog Backdrop */}
+      <div className="absolute inset-0 pointer-events-none z-10" style={{ background: 'linear-gradient(to top, rgba(250,250,247,0.08) 0%, transparent 60%)' }}>
         <motion.div
           className="absolute inset-0"
-          animate={{ opacity: [0.3, 0.62, 0.3] }}
-          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+          animate={{ opacity: [0.2, 0.5, 0.2] }}
+          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
           style={{ background: 'inherit' }}
         />
-      </motion.div>
+      </div>
 
-      {/* Layer 4 — Leaf clusters with subtle sway and soft scroll parallax */}
+      {/* Floating leaves with GSAP loops */}
       <motion.div
-        className="absolute inset-0 pointer-events-none"
-        style={{ y: leafScrollY, opacity: leafOpacity }}
+        ref={leavesContainerRef}
+        className="absolute inset-0 pointer-events-none z-20"
+        style={{ y: leafScrollY }}
       >
         {leafClusters.map((cluster) => (
-          <motion.div
+          <div
             key={cluster.id}
-            className="absolute pointer-events-none"
+            className="absolute"
             style={{
               left: cluster.left,
-              bottom: cluster.bottom,
+              top: cluster.top,
               width: cluster.width,
-              height: cluster.height,
-            }}
-            animate={{
-              rotate: [0, cluster.rotate, 0],
-              x: [0, cluster.x, 0],
-              y: [0, -cluster.y, 0],
-            }}
-            transition={{
-              duration: cluster.duration,
-              delay: cluster.delay,
-              repeat: Infinity,
-              repeatType: 'reverse',
-              ease: 'easeInOut',
+              transform: `rotate(${cluster.rotation}deg)`,
+              filter: 'drop-shadow(0 8px 16px rgba(0,0,0,0.15))',
             }}
           >
-            <div className="relative w-full h-full">
-              <span
-                className="absolute rounded-full"
-                style={{
-                  left: '10%',
-                  top: '22%',
-                  width: '45%',
-                  height: '38%',
-                  background: 'radial-gradient(circle at 40% 40%, rgba(226, 238, 213, 0.18), transparent 52%)',
-                  filter: 'blur(1px)',
-                }}
-              />
-              <span
-                className="absolute rounded-full"
-                style={{
-                  left: '35%',
-                  top: '42%',
-                  width: '44%',
-                  height: '42%',
-                  background: 'radial-gradient(circle at 55% 30%, rgba(199, 214, 180, 0.24), transparent 58%)',
-                  filter: 'blur(0.8px)',
-                }}
-              />
-              <span
-                className="absolute rounded-full"
-                style={{
-                  left: '57%',
-                  top: '18%',
-                  width: '38%',
-                  height: '34%',
-                  background: 'radial-gradient(circle at 30% 50%, rgba(180, 200, 153, 0.2), transparent 55%)',
-                  filter: 'blur(0.8px)',
-                }}
-              />
-            </div>
-          </motion.div>
+            <TeaLeaf className="w-full h-auto" />
+          </div>
         ))}
       </motion.div>
 
-      {/* Layer 5 — Foreground content with subtle scroll parallax */}
-      <motion.div className="absolute inset-0 flex items-center justify-center">
-        <motion.div
-          className="text-center max-w-5xl px-6"
-          style={{ opacity: contentOpacity, y: contentY }}
-        >
-          {/* Initial reveal */}
+      {/* Main Content Area */}
+      <motion.div
+        className="absolute inset-0 flex items-center justify-center z-20"
+        style={{ opacity: contentOpacity, y: contentY }}
+      >
+        <div className="text-center max-w-5xl px-6 flex flex-col items-center">
+
+          {/* Accent header */}
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 2.6, duration: 0.8 }}
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1, duration: 0.6 }}
           >
-            <p className="text-[#D4AF37]/90 uppercase tracking-[0.35em] text-sm mb-6">
+            <p className="text-[#D4AF37] uppercase tracking-[0.4em] text-xs sm:text-sm font-semibold mb-6">
               Valparai · Tamil Nadu
             </p>
           </motion.div>
 
-          {/* Letter-by-letter title */}
+          {/* Letter Reveal Title */}
           <h1
-            className="text-6xl md:text-8xl lg:text-9xl text-white mb-6 leading-none"
-            style={{ fontFamily: "'Playfair Display', serif" }}
+            ref={titleRef}
+            className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl text-white mb-6 leading-none font-serif tracking-tight"
           >
             {TITLE.split('').map((char, i) => (
-              <motion.span
+              <span
                 key={i}
-                className="inline-block"
-                style={{ whiteSpace: char === ' ' ? 'pre' : undefined }}
-                initial={{ opacity: 0, y: 70, rotateX: -90 }}
-                animate={{ opacity: 1, y: 0, rotateX: 0 }}
-                transition={{
-                  delay: 3 + i * 0.065,
-                  duration: 0.55,
-                  ease: [0.22, 1, 0.36, 1],
+                className="char-span inline-block opacity-0 translate-y-[40px] -rotate-x-[60deg]"
+                style={{
+                  whiteSpace: char === ' ' ? 'pre' : undefined,
+                  transformOrigin: 'bottom center',
+                  perspective: '1000px',
                 }}
               >
                 {char}
-              </motion.span>
+              </span>
             ))}
           </h1>
 
-          {/* Subtitle — word by word */}
-          <div className="overflow-hidden mb-10">
-            <motion.p
-              className="text-xl md:text-2xl text-white/80 tracking-wider"
-              initial={{ y: 40, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 3.95, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          {/* Subtitle */}
+          <div className="overflow-hidden mb-10 h-8 flex justify-center items-center">
+            <div
+              ref={subtitleOuterRef}
+              className="opacity-0 translate-y-[20px]"
             >
-              {SUBTITLE}
-            </motion.p>
+              <p className="text-lg sm:text-xl md:text-2xl text-white/90 tracking-widest font-serif italic">
+                {SUBTITLE}
+              </p>
+            </div>
           </div>
 
-          {/* CTA buttons */}
-          <motion.div
-            className="flex flex-col sm:flex-row gap-4 justify-center items-center"
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 4.2, duration: 0.8 }}
+          {/* CTA Buttons */}
+          <div
+            ref={ctaOuterRef}
+            className="flex flex-col sm:flex-row gap-4 justify-center items-center opacity-0 translate-y-[20px]"
           >
             <Button
               onClick={() => scrollToSection('booking')}
-              className="bg-[#D4AF37] text-[#111111] hover:bg-[#D4AF37]/90 rounded-[18px] px-10 py-6 text-lg font-medium"
+              className="bg-[#D4AF37] text-[#111111] hover:bg-white hover:text-black rounded-[18px] px-10 py-6 text-lg font-semibold transition-all duration-350 min-w-[200px]"
               style={{ boxShadow: '0 8px 32px rgba(212, 175, 55, 0.45)' }}
             >
-              Book Now
+              Book Your Stay
             </Button>
             <Button
               onClick={() => scrollToSection('about')}
-              variant="outline"
-              className="border-2 border-white/30 text-white hover:bg-white/10 rounded-[18px] px-10 py-6 text-lg"
-              style={{
-                background: 'rgba(255,255,255,0.10)',
-                backdropFilter: 'blur(14px)',
-              }}
+              className="border-2 border-white/30 text-white hover:bg-white/10 hover:border-white rounded-[18px] px-10 py-6 text-lg min-w-[200px] bg-white/10 backdrop-blur-md transition-all duration-350"
             >
-              Explore
+              Explore Resort
             </Button>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       </motion.div>
 
-      {/* Scroll indicator */}
+      {/* Scroll down indicator */}
       <motion.div
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 cursor-pointer z-20 flex flex-col items-center gap-1"
-        animate={{ y: [0, 10, 0] }}
-        transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 cursor-pointer z-30 flex flex-col items-center gap-1.5 focus:outline-none"
+        animate={{ y: [0, 8, 0] }}
+        transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
         style={{ opacity: contentOpacity }}
         onClick={() => scrollToSection('about')}
       >
-        <span className="text-white/40 text-xs tracking-widest uppercase">Scroll</span>
-        <ChevronDown className="w-6 h-6 text-white/50" />
+        <span className="text-white/40 text-[10px] tracking-[0.25em] uppercase font-semibold">Scroll</span>
+        <ChevronDown className="w-5 h-5 text-white/50" />
       </motion.div>
     </section>
   );
 }
+

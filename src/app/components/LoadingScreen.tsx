@@ -11,7 +11,7 @@ export function LoadingScreen({ onComplete }: LoadingScreenProps) {
 
   useEffect(() => {
     const timings = [300, 800, 1200, 1800, 2000];
-    
+
     const timeouts = timings.map((delay, index) =>
       setTimeout(() => setStage(index + 1), delay)
     );
@@ -66,7 +66,14 @@ export function LoadingScreen({ onComplete }: LoadingScreenProps) {
           }}
           transition={{ duration: 0.6, ease: 'backOut' }}
         >
-          <Mountain className="w-20 h-20 text-[#D4AF37] mb-4" />
+          <img
+            src="/image/logoo.png"
+            alt="Tall Tree Nest Logo"
+            className="w-[240px] h-[72px] mb-4 object-fill select-none pointer-events-none"
+            style={{
+              filter: 'contrast(1.3) brightness(1.05) drop-shadow(0 1px 4px rgba(255, 255, 255, 0.35))',
+            }}
+          />
           <h1 className="text-4xl md:text-5xl text-white tracking-wider">
             Tall Tree Nest
           </h1>

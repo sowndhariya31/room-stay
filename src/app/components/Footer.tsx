@@ -132,7 +132,14 @@ export function Footer() {
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.7 }}
             >
-              <Mountain className="w-10 h-10 text-[#D4AF37]" />
+              <img
+                src="/image/logoo.png"
+                alt="Tall Tree Nest Logo"
+                className="w-[245px] h-20 object-fill select-none pointer-events-none"
+                style={{
+                  filter: 'contrast(1.3) brightness(1.05) drop-shadow(0 1px 3px rgba(255, 255, 255, 0.3))',
+                }}
+              />
               <span className="text-2xl" style={{ fontFamily: "'Playfair Display', serif" }}>
                 Tall Tree Nest
               </span>
@@ -169,7 +176,7 @@ export function Footer() {
               </li>
               <li className="flex items-center gap-3 text-white/50 text-sm">
                 <Phone className="w-4 h-4 text-[#5D8C58]" />
-                <span>+91 98765 43210</span>
+                <span>+91 98946 24989</span>
               </li>
               <li className="flex items-center gap-3 text-white/50 text-sm">
                 <Mail className="w-4 h-4 text-[#5D8C58]" />
@@ -178,20 +185,9 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Newsletter */}
+          {/* Social */}
           <div>
-            <h4 className="mb-5 text-[#D4AF37] tracking-wider uppercase text-xs">Newsletter</h4>
-            <p className="text-white/50 mb-4 text-sm">Subscribe for exclusive offers</p>
-            <div className="flex gap-2">
-              <Input
-                type="email"
-                placeholder="Your email"
-                className="bg-white/5 border-white/10 text-white placeholder:text-white/30 rounded-[14px] text-sm focus:border-[#D4AF37]/50"
-              />
-              <Button className="bg-[#D4AF37] text-[#111111] hover:bg-[#D4AF37]/90 rounded-[14px] whitespace-nowrap text-sm px-4">
-                Join
-              </Button>
-            </div>
+            <h4 className="mb-5 text-[#D4AF37] tracking-wider uppercase text-xs">Follow Us</h4>
             <div className="flex gap-3 mt-6">
               {[Facebook, Instagram, Twitter].map((Icon, i) => (
                 <motion.a

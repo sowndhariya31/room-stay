@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import Lenis from 'lenis';
-import { CustomCursor } from './components/CustomCursor';
 import { LoadingScreen } from './components/LoadingScreen';
 import { FloatingParticles } from './components/FloatingParticles';
 import { Navbar } from './components/Navbar';
@@ -53,7 +52,6 @@ function App() {
       {isLoading && <LoadingScreen onComplete={() => setIsLoading(false)} />}
 
       <div className="relative">
-        <CustomCursor />
         <FloatingParticles />
         <Navbar />
         <main>
