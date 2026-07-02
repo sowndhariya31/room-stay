@@ -126,7 +126,6 @@ function AttractionCard({ attraction, index, isInView }: AttractionCardProps) {
         </div>
 
         <div className="flex items-center gap-2 text-[#D4AF37] text-sm font-semibold tracking-wider uppercase group-hover:gap-4 transition-all duration-300">
-          <span>Learn More</span>
           <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
         </div>
       </div>

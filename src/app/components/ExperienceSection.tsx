@@ -41,8 +41,8 @@ export function ExperienceSection() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   return (
-    <section id="experience" ref={ref} className="py-24 md:py-32 bg-white relative overflow-hidden">
-      <div className="max-w-[1400px] mx-auto px-6">
+    <section id="experience" ref={ref} className="py-24 md:py-32 bg-white relative overflow-x-hidden overflow-y-visible">
+      <div className="max-w-[1400px] mx-auto px-6 overflow-x-hidden overflow-y-visible">
         <motion.div
           className="text-center mb-16"
           initial={{ opacity: 0, y: 30 }}
@@ -58,10 +58,11 @@ export function ExperienceSection() {
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-12 items-center">
-          {/* Large Image */}
+        {/* Layout stacks vertically on mobile (flex-col) and grid on desktop */}
+        <div className="flex flex-col md:grid md:grid-cols-2 gap-12 items-center overflow-x-hidden overflow-y-visible">
+          {/* Large Image - full width on mobile, aspect 4:3 on mobile, height 500-600px on desktop */}
           <motion.div
-            className="relative h-[500px] md:h-[600px] overflow-hidden"
+            className="relative w-full h-auto aspect-[4/3] md:h-[600px] md:aspect-auto overflow-hidden"
             style={{ borderRadius: '28px' }}
             initial={{ opacity: 0, x: -50 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
@@ -72,13 +73,12 @@ export function ExperienceSection() {
               alt="Mountain Experience"
               className="w-full h-full object-cover"
             />
-            
             {/* Floating gradient */}
             <div className="absolute inset-0 bg-gradient-to-t from-[#234F2A]/50 to-transparent" />
           </motion.div>
 
-          {/* Floating Cards */}
-          <div className="relative h-[600px]">
+          {/* Floating Cards (Desktop version) */}
+          <div className="hidden md:block relative h-[600px] w-full">
             {experiences.map((experience, index) => (
               <ExperienceCard
                 key={index}
@@ -88,6 +88,17 @@ export function ExperienceSection() {
                 isHovered={hoveredIndex === index}
                 onHover={() => setHoveredIndex(index)}
                 onLeave={() => setHoveredIndex(null)}
+              />
+            ))}
+          </div>
+
+          {/* Vertical Grid Cards (Mobile version) - 100% wide, no offsets, no negative margins */}
+          <div className="md:hidden flex flex-col gap-4 w-full px-1">
+            {experiences.map((experience, index) => (
+              <MobileExperienceCard
+                key={index}
+                experience={experience}
+                index={index}
               />
             ))}
           </div>
@@ -175,6 +186,40 @@ function ExperienceCard({ experience, index, isInView, isHovered, onHover, onLea
           {experience.description}
         </motion.p>
       </motion.div>
+    </motion.div>
+  );
+}
+
+function MobileExperienceCard({ experience, index }: { experience: typeof experiences[0]; index: number }) {
+  return (
+    <motion.div
+      className="w-full max-w-[480px] mx-auto cursor-pointer"
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-50px' }}
+      transition={{ duration: 0.5, delay: index * 0.08 }}
+    >
+      <div
+        className="p-6 backdrop-blur-lg"
+        style={{
+          background: 'rgba(255, 255, 255, 0.45)',
+          border: '1px solid rgba(255, 255, 255, 0.5)',
+          borderRadius: '24px',
+          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.08)',
+        }}
+      >
+        <div
+          className="flex items-center gap-3 mb-3 border-b border-black/5 pb-2"
+          style={{ color: experience.color }}
+        >
+          {experience.icon}
+          <h3 className="text-lg font-medium">{experience.title}</h3>
+        </div>
+
+        <p className="text-sm text-[#111111]/75 leading-relaxed">
+          {experience.description}
+        </p>
+      </div>
     </motion.div>
   );
 }
