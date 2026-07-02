@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState } from 'react';
-import { motion, useInView } from 'motion/react';
+import { motion, useInView, AnimatePresence } from 'motion/react';
 import { Star } from 'lucide-react';
 
 const reviews = [
@@ -27,14 +27,58 @@ export function ReviewsSection() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isDesktop, setIsDesktop] = useState(true);
+  const [isHoveredOrSwiping, setIsHoveredOrSwiping] = useState(false);
 
   useEffect(() => {
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth >= 768);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const handleNext = () => {
+    setCurrentIndex((prev) => (prev + 1) % reviews.length);
+  };
+
+  const handlePrev = () => {
+    setCurrentIndex((prev) => (prev === 0 ? reviews.length - 1 : prev - 1));
+  };
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const active = document.activeElement;
+      if (
+        active &&
+        (active.tagName === 'INPUT' ||
+          active.tagName === 'TEXTAREA' ||
+          active.getAttribute('contenteditable') === 'true')
+      ) {
+        return;
+      }
+      if (e.key === 'ArrowRight') {
+        handleNext();
+      } else if (e.key === 'ArrowLeft') {
+        handlePrev();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  // Autoplay - pauses when user is swiping or hovering
+  useEffect(() => {
+    if (isHoveredOrSwiping) return;
+
     const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % reviews.length);
+      handleNext();
     }, 5000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [isHoveredOrSwiping]);
 
   return (
     <section id="reviews" ref={ref} className="py-24 md:py-32 bg-[#FAFAF7] relative overflow-hidden">
@@ -68,19 +112,85 @@ export function ReviewsSection() {
         </motion.div>
 
         <div className="relative max-w-4xl mx-auto">
-          {/* Review Cards */}
-          <div className="relative h-[400px] md:h-[350px]">
-            {reviews.map((review, index) => (
-              <ReviewCard
-                key={index}
-                review={review}
-                index={index}
-                currentIndex={currentIndex}
-                totalReviews={reviews.length}
-                isInView={isInView}
-              />
-            ))}
-          </div>
+          {isDesktop ? (
+            /* Desktop Stack Carousel style */
+            <div
+              className="relative h-[400px] md:h-[350px]"
+              onMouseEnter={() => setIsHoveredOrSwiping(true)}
+              onMouseLeave={() => setIsHoveredOrSwiping(false)}
+            >
+              {reviews.map((review, index) => (
+                <ReviewCard
+                  key={index}
+                  review={review}
+                  index={index}
+                  currentIndex={currentIndex}
+                  totalReviews={reviews.length}
+                  isInView={isInView}
+                />
+              ))}
+            </div>
+          ) : (
+            /* Mobile Swipe Carousel with Touch Drag */
+            <div
+              className="relative overflow-visible px-2 min-h-[360px] flex items-center justify-center"
+              onTouchStart={() => setIsHoveredOrSwiping(true)}
+              onTouchEnd={() => setIsHoveredOrSwiping(false)}
+            >
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentIndex}
+                  drag="x"
+                  dragConstraints={{ left: 0, right: 0 }}
+                  dragElastic={0.5}
+                  onDragStart={() => setIsHoveredOrSwiping(true)}
+                  onDragEnd={(event, info) => {
+                    setIsHoveredOrSwiping(false);
+                    const threshold = 60;
+                    if (info.offset.x < -threshold) {
+                      handleNext();
+                    } else if (info.offset.x > threshold) {
+                      handlePrev();
+                    }
+                  }}
+                  initial={{ opacity: 0, x: 80, scale: 0.97 }}
+                  animate={{ opacity: 1, x: 0, scale: 1 }}
+                  exit={{ opacity: 0, x: -80, scale: 0.97 }}
+                  transition={{ duration: 0.35, ease: 'easeOut' }}
+                  className="w-full cursor-grab active:cursor-grabbing"
+                >
+                  <div
+                    className="w-full p-6 sm:p-10 select-none"
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.45)',
+                      backdropFilter: 'blur(20px)',
+                      border: '1px solid rgba(255, 255, 255, 0.5)',
+                      borderRadius: '24px',
+                      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.08)',
+                    }}
+                  >
+                    {/* Stars */}
+                    <div className="flex justify-center gap-1 mb-5">
+                      {[...Array(reviews[currentIndex].rating)].map((_, i) => (
+                        <Star key={i} className="w-5 h-5 fill-[#D4AF37] text-[#D4AF37]" />
+                      ))}
+                    </div>
+
+                    {/* Comment */}
+                    <p className="text-base sm:text-lg text-[#111111]/80 text-center mb-6 leading-relaxed italic px-2">
+                      "{reviews[currentIndex].comment}"
+                    </p>
+
+                    {/* Author */}
+                    <div className="text-center">
+                      <h4 className="text-base sm:text-lg text-[#234F2A] font-semibold">{reviews[currentIndex].name}</h4>
+                      <p className="text-xs sm:text-sm text-[#111111]/60">{reviews[currentIndex].location}</p>
+                    </div>
+                  </div>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          )}
 
           {/* Dots Indicator */}
           <div className="flex justify-center gap-3 mt-8">
@@ -113,7 +223,7 @@ interface ReviewCardProps {
 function ReviewCard({ review, index, currentIndex, totalReviews, isInView }: ReviewCardProps) {
   const getPosition = () => {
     const diff = (index - currentIndex + totalReviews) % totalReviews;
-    
+
     if (diff === 0) {
       return { x: '0%', scale: 1, opacity: 1, zIndex: 3 };
     } else if (diff === 1) {
