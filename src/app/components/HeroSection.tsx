@@ -211,7 +211,8 @@ export function HeroSection() {
             </Button>
             <Button
               onClick={() => scrollToSection('about')}
-              className="border-2 border-[#111111]/30 text-[#111111] hover:bg-[#111111]/10 hover:border-[#111111] rounded-[18px] px-10 py-6 text-lg min-w-[200px] bg-black/5 backdrop-blur-md transition-all duration-350"
+              className="bg-[#D4AF37] text-[#111111] hover:bg-white hover:text-black rounded-[18px] px-10 py-6 text-lg font-semibold transition-all duration-350 min-w-[200px]"
+              style={{ boxShadow: '0 8px 32px rgba(212, 175, 55, 0.45)' }}
             >
               Explore Resort
             </Button>
