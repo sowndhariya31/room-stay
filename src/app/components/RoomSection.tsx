@@ -16,7 +16,7 @@ const rooms = [
   {
     id: 2,
     name: 'Standard Non-AC',
-    image: 'https://pix8.agoda.net/hotelImages/216/2167387/2167387_17062919170054166122.jpg?ca=6&ce=1&s=1024x',
+    image: 'public/image/bed.jpg',
     price: '₹2,635',
     features: ['Private Balcony', 'Jacuzzi', 'Fitness Center', '24-hot water'],
     description: 'Spacious suite with premium amenities',
