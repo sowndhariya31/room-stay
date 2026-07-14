@@ -16,7 +16,7 @@ const rooms = [
   {
     id: 2,
     name: 'Standard Non-AC',
-    image: 'public/image/bed.jpg',
+    image: '/image/bed.jpg',
     price: '₹2,635',
     features: ['Private Balcony', 'Jacuzzi', 'Fitness Center', '24-hot water'],
     description: 'Spacious suite with premium amenities',
