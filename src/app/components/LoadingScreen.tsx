@@ -67,12 +67,9 @@ export function LoadingScreen({ onComplete }: LoadingScreenProps) {
           transition={{ duration: 0.6, ease: 'backOut' }}
         >
           <img
-            src="/image/logoo.png"
+            src="/image/l.png"
             alt="Tall Tree Nest Logo"
-            className="w-[240px] h-[72px] mb-4 object-fill select-none pointer-events-none"
-            style={{
-              filter: 'contrast(1.3) brightness(1.05) drop-shadow(0 1px 4px rgba(255, 255, 255, 0.35))',
-            }}
+            className="h-24 w-auto object-contain mb-4 select-none pointer-events-none"
           />
           <h1 className="text-4xl md:text-5xl text-white tracking-wider">
             Tall Tree Nest

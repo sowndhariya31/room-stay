@@ -1,16 +1,15 @@
 import { Phone } from 'lucide-react';
 
 export function FloatingContactButtons() {
-    const whatsappMessage = `Hello Tall Tree Nest,
-
-I would like to enquire about room availability and booking.
-
-Please share:
-• Available Rooms
-• Room Price
-• Check-in & Check-out Details
-
-Thank you.`;
+    const whatsappMessage = `Hello! I would like to enquire about booking a stay. Here are my details:
+- Property of Interest: [Sun Homestay / JBR Lodge]
+- No. of Guests: [Enter count]
+- Check-in Date: 
+- Check-out Date: 
+- Customer Name: [Enter Name]
+- Mobile Number: [Enter Mobile Number]
+- Customer Place: [Enter Place]
+- ID Proof: [Enter ID Proof Number/Type]`;
 
     const whatsappLink = `https://wa.me/919894624989?text=${encodeURIComponent(whatsappMessage)}`;
     const phoneLink = `tel:+919894624989`;

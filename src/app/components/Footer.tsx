@@ -133,12 +133,9 @@ export function Footer() {
               transition={{ duration: 0.7 }}
             >
               <img
-                src="/image/logoo.png"
+                src="/image/l.png"
                 alt="Tall Tree Nest Logo"
-                className="w-[245px] h-20 object-fill select-none pointer-events-none"
-                style={{
-                  filter: 'contrast(1.3) brightness(1.05) drop-shadow(0 1px 3px rgba(255, 255, 255, 0.3))',
-                }}
+                className="h-20 w-auto object-contain select-none pointer-events-none"
               />
               <span className="text-2xl" style={{ fontFamily: "'Playfair Display', serif" }}>
                 Tall Tree Nest

@@ -80,7 +80,7 @@ export function Navbar() {
         style={{
           background: scrolled
             ? 'rgba(255, 255, 255, 0.85)'
-            : 'rgba(17, 17, 17, 0.15)',
+            : 'rgba(255, 255, 255, 0.25)',
           backdropFilter: scrolled ? 'blur(20px)' : 'blur(4px)',
           boxShadow: scrolled
             ? '0 10px 30px -10px rgba(0, 0, 0, 0.08)'
@@ -88,7 +88,7 @@ export function Navbar() {
           borderBottom: scrolled ? '1px solid rgba(35, 79, 42, 0.05)' : '1px solid rgba(255, 255, 255, 0.05)',
         }}
       >
-        <div className="max-w-[1400px] mx-auto px-6 py-4 flex items-center justify-between">
+        <div className="max-w-[1400px] mx-auto px-6 py-2 flex items-center justify-between">
 
           {/* Logo */}
           <button
@@ -96,14 +96,9 @@ export function Navbar() {
             className="flex items-center gap-2 group cursor-pointer border-0 bg-transparent p-0 focus:outline-none"
           >
             <img
-              src="/image/logoo.png"
+              src="/image/l.png"
               alt="Tall Tree Nest Logo"
-              className="h-[42px] md:h-[48px] lg:h-[60px] w-[140px] md:w-[170px] lg:w-[210px] object-fill transition-all duration-300 select-none pointer-events-none"
-              style={{
-                filter: scrolled
-                  ? 'contrast(1.3) brightness(1.05) drop-shadow(0 1px 3px rgba(0,0,0,0.15))'
-                  : 'contrast(1.35) brightness(1.08) drop-shadow(0 1px 4px rgba(255, 255, 255, 0.4))',
-              }}
+              className="h-[60px] md:h-[75px] lg:h-[95px] w-auto object-contain transition-all duration-300 select-none pointer-events-none"
             />
           </button>
 
@@ -120,7 +115,7 @@ export function Navbar() {
                     ? 'text-[#D4AF37]'
                     : scrolled
                       ? 'text-[#111111]/80 hover:text-[#234F2A]'
-                      : 'text-white/80 hover:text-white'
+                      : 'text-[#111111] hover:text-[#234F2A]'
                     }`}
                   whileHover={{ y: -1 }}
                 >
@@ -137,7 +132,7 @@ export function Navbar() {
               onClick={() => scrollToSection('booking')}
               className={`rounded-[18px] px-6 py-5 text-sm font-semibold transition-all duration-350 ${scrolled
                 ? 'bg-[#234F2A] text-white hover:bg-[#D4AF37] hover:text-black shadow-lg shadow-[#234F2A]/10'
-                : 'bg-white text-[#234F2A] hover:bg-[#D4AF37] hover:text-black shadow-lg'
+                : 'bg-[#234F2A] text-white hover:bg-[#D4AF37] hover:text-black shadow-lg'
                 }`}
             >
               Book Now
@@ -151,9 +146,9 @@ export function Navbar() {
             aria-label="Toggle menu"
           >
             {mobileMenuOpen ? (
-              <X className={`w-6 h-6 ${scrolled || mobileMenuOpen ? 'text-[#111111]' : 'text-white'}`} />
+              <X className={`w-6 h-6 ${scrolled || mobileMenuOpen ? 'text-[#111111]' : 'text-[#111111]'}`} />
             ) : (
-              <Menu className={`w-6 h-6 ${scrolled ? 'text-[#111111]' : 'text-white'}`} />
+              <Menu className={`w-6 h-6 ${scrolled ? 'text-[#111111]' : 'text-[#111111]'}`} />
             )}
           </button>
         </div>
@@ -184,12 +179,9 @@ export function Navbar() {
               <div className="flex justify-between items-center mb-10 border-b border-[#234F2A]/10 pb-4">
                 <div className="flex items-center gap-2">
                   <img
-                    src="/image/logoo.png"
+                    src="/image/l.png"
                     alt="Tall Tree Nest Logo"
-                    className="h-12 w-[150px] object-fill select-none pointer-events-none"
-                    style={{
-                      filter: 'contrast(1.3) brightness(1.05) drop-shadow(0 1px 3px rgba(0,0,0,0.1))',
-                    }}
+                    className="h-14 w-auto object-contain select-none pointer-events-none"
                   />
                 </div>
                 <button

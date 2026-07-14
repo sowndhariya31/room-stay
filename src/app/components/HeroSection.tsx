@@ -113,42 +113,17 @@ export function HeroSection() {
   return (
     <section id="hero" ref={sectionRef} className="relative h-screen overflow-hidden">
 
-      {/* Background Image - Ken Burns Zoom Effect */}
+      {/* Background Image */}
       <div className="absolute inset-0 overflow-hidden bg-black">
-        <motion.img
-          src="/image/forest.jpeg"
+        <img
+          src="https://images.pixels.com/images/artworkimages/mediumlarge/2/valparai-mahesh.jpg"
           alt="Tall Tree Nest Forest View"
           className="w-full h-full object-cover"
           style={{
-            willChange: 'transform',
             objectPosition: 'center',
-            filter: 'brightness(1.25) contrast(1.08) saturate(1.22)',
-            WebkitFilter: 'brightness(1.25) contrast(1.08) saturate(1.22)',
-          }}
-          animate={{
-            scale: [1, 1.06, 1],
-          }}
-          transition={{
-            duration: 22,
-            repeat: Infinity,
-            ease: 'linear',
           }}
         />
       </div>
-
-      {/* Light Black Overlay (25%) only to improve text readability */}
-      <div className="absolute inset-0 bg-black/25 z-10" />
-
-      {/* Elegant Fog Backdrop */}
-      <div className="absolute inset-0 pointer-events-none z-10" style={{ background: 'linear-gradient(to top, rgba(250,250,247,0.08) 0%, transparent 60%)' }}>
-        <motion.div
-          className="absolute inset-0"
-          animate={{ opacity: [0.2, 0.5, 0.2] }}
-          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
-          style={{ background: 'inherit' }}
-        />
-      </div>
-
       {/* Floating leaves with GSAP loops */}
       <motion.div
         ref={leavesContainerRef}
@@ -185,7 +160,7 @@ export function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1, duration: 0.6 }}
           >
-            <p className="text-[#D4AF37] uppercase tracking-[0.4em] text-xs sm:text-sm font-semibold mb-6">
+            <p className="text-[#111111] uppercase tracking-[0.4em] text-xs sm:text-sm font-semibold mb-6">
               Valparai · Tamil Nadu
             </p>
           </motion.div>
@@ -193,7 +168,7 @@ export function HeroSection() {
           {/* Letter Reveal Title */}
           <h1
             ref={titleRef}
-            className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl text-white mb-6 leading-none font-serif tracking-tight"
+            className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl text-[#111111] mb-6 leading-none font-serif tracking-tight"
           >
             {TITLE.split('').map((char, i) => (
               <span
@@ -211,12 +186,12 @@ export function HeroSection() {
           </h1>
 
           {/* Subtitle */}
-          <div className="overflow-hidden mb-10 h-8 flex justify-center items-center">
+          <div className="overflow-hidden mb-10 h-auto min-h-[2rem] py-1 flex justify-center items-center">
             <div
               ref={subtitleOuterRef}
               className="opacity-0 translate-y-[20px]"
             >
-              <p className="text-lg sm:text-xl md:text-2xl text-white/90 tracking-widest font-serif italic">
+              <p className="text-lg sm:text-xl md:text-2xl text-[#111111]/90 tracking-widest font-serif italic">
                 {SUBTITLE}
               </p>
             </div>
@@ -236,7 +211,7 @@ export function HeroSection() {
             </Button>
             <Button
               onClick={() => scrollToSection('about')}
-              className="border-2 border-white/30 text-white hover:bg-white/10 hover:border-white rounded-[18px] px-10 py-6 text-lg min-w-[200px] bg-white/10 backdrop-blur-md transition-all duration-350"
+              className="border-2 border-[#111111]/30 text-[#111111] hover:bg-[#111111]/10 hover:border-[#111111] rounded-[18px] px-10 py-6 text-lg min-w-[200px] bg-black/5 backdrop-blur-md transition-all duration-350"
             >
               Explore Resort
             </Button>
@@ -252,8 +227,8 @@ export function HeroSection() {
         style={{ opacity: contentOpacity }}
         onClick={() => scrollToSection('about')}
       >
-        <span className="text-white/40 text-[10px] tracking-[0.25em] uppercase font-semibold">Scroll</span>
-        <ChevronDown className="w-5 h-5 text-white/50" />
+        <span className="text-[#111111]/60 text-[10px] tracking-[0.25em] uppercase font-semibold">Scroll</span>
+        <ChevronDown className="w-5 h-5 text-[#111111]/70" />
       </motion.div>
     </section>
   );

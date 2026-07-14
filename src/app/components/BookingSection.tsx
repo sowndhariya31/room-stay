@@ -4,13 +4,13 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { Calendar, Users, Home } from 'lucide-react';
+import { Calendar, Users, Home, User, Phone, MapPin, IdCard } from 'lucide-react';
 import { toast } from 'sonner';
 
 const roomTypeLabels: Record<string, string> = {
-  deluxe: 'Deluxe Room',
-  premium: 'Premium Suite',
-  royal: 'Royal Villa',
+  deluxe: 'Super Deluxe AC Room',
+  premium: 'Deluxe Non-AC',
+  royal: 'Standard Non-AC',
 };
 
 export function BookingSection() {
@@ -18,6 +18,10 @@ export function BookingSection() {
   const isInView = useInView(ref, { once: true, margin: '-100px' });
 
   const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
+    place: '',
+    idProof: '',
     arrival: '',
     departure: '',
     guests: '2',
@@ -25,12 +29,32 @@ export function BookingSection() {
   });
 
   const [errors, setErrors] = useState({
+    name: '',
+    phone: '',
+    place: '',
+    idProof: '',
     arrival: '',
     departure: '',
     guests: '',
   });
 
   // Clear errors when user changes inputs
+  useEffect(() => {
+    setErrors((prev) => ({ ...prev, name: '' }));
+  }, [formData.name]);
+
+  useEffect(() => {
+    setErrors((prev) => ({ ...prev, phone: '' }));
+  }, [formData.phone]);
+
+  useEffect(() => {
+    setErrors((prev) => ({ ...prev, place: '' }));
+  }, [formData.place]);
+
+  useEffect(() => {
+    setErrors((prev) => ({ ...prev, idProof: '' }));
+  }, [formData.idProof]);
+
   useEffect(() => {
     setErrors((prev) => ({ ...prev, arrival: '' }));
   }, [formData.arrival]);
@@ -42,12 +66,43 @@ export function BookingSection() {
   const formatDate = (dateStr: string) => {
     if (!dateStr) return '';
     const [year, month, day] = dateStr.split('-');
-    return `${day}-${month}-${year}`;
+    return `${day}/${month}/${year}`;
   };
 
   const validate = (): boolean => {
-    const newErrors = { arrival: '', departure: '', guests: '' };
+    const newErrors = {
+      name: '',
+      phone: '',
+      place: '',
+      idProof: '',
+      arrival: '',
+      departure: '',
+      guests: '',
+    };
     let isValid = true;
+
+    if (!formData.name.trim()) {
+      newErrors.name = 'Customer name is required';
+      isValid = false;
+    }
+
+    if (!formData.phone.trim()) {
+      newErrors.phone = 'Mobile number is required';
+      isValid = false;
+    } else if (!/^\d{10}$/.test(formData.phone.trim())) {
+      newErrors.phone = 'Please enter a valid 10-digit mobile number';
+      isValid = false;
+    }
+
+    if (!formData.place.trim()) {
+      newErrors.place = 'Customer place is required';
+      isValid = false;
+    }
+
+    if (!formData.idProof.trim()) {
+      newErrors.idProof = 'ID proof is required';
+      isValid = false;
+    }
 
     // Get today with local midnight time
     const today = new Date();
@@ -96,7 +151,14 @@ export function BookingSection() {
 
     if (!isValid) {
       // Find the first error to toast it
-      const errorMsg = newErrors.arrival || newErrors.departure || newErrors.guests;
+      const errorMsg =
+        newErrors.name ||
+        newErrors.phone ||
+        newErrors.place ||
+        newErrors.idProof ||
+        newErrors.arrival ||
+        newErrors.departure ||
+        newErrors.guests;
       toast.error(errorMsg || 'Please fix the errors in the booking form.');
     }
 
@@ -112,23 +174,15 @@ export function BookingSection() {
     const guestCount = formData.guests;
     const roomLabel = roomTypeLabels[formData.room] || formData.room;
 
-    const message = `Hello Tall Tree Nest,
-
-I would like to book a room.
-
-Arrival Date:
-${formattedArrival}
-
-Departure Date:
-${formattedDeparture}
-
-Guests:
-${guestCount}
-
-Room Type:
-${roomLabel}
-
-Please contact me.`;
+    const message = `Hello! I would like to enquire about booking a stay. Here are my details:
+- Property of Interest: ${roomLabel}
+- No. of Guests: ${guestCount}
+- Check-in Date: ${formattedArrival}
+- Check-out Date: ${formattedDeparture}
+- Customer Name: ${formData.name.trim()}
+- Mobile Number: ${formData.phone.trim()}
+- Customer Place: ${formData.place.trim()}
+- ID Proof: ${formData.idProof.trim()}`;
 
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/919894624989?text=${encodedMessage}`;
@@ -141,12 +195,20 @@ Please contact me.`;
 
     // Reset Form
     setFormData({
+      name: '',
+      phone: '',
+      place: '',
+      idProof: '',
       arrival: '',
       departure: '',
       guests: '2',
       room: 'deluxe',
     });
     setErrors({
+      name: '',
+      phone: '',
+      place: '',
+      idProof: '',
       arrival: '',
       departure: '',
       guests: '',
@@ -207,6 +269,122 @@ Please contact me.`;
           >
             <form onSubmit={handleSubmit} className="space-y-6" noValidate>
               <div className="grid md:grid-cols-2 gap-6">
+                {/* Customer Name */}
+                <div className="space-y-2">
+                  <Label htmlFor="name" className="text-[#234F2A] font-medium flex items-center gap-2">
+                    <User className="w-4 h-4 text-[#D4AF37]" />
+                    Customer Name
+                  </Label>
+                  <Input
+                    id="name"
+                    type="text"
+                    placeholder="Enter your name"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    className={`border transition-all duration-300 rounded-[18px] h-12 bg-white/50 focus:bg-white text-base ${errors.name
+                      ? 'border-red-500 focus:border-red-500 focus:ring-red-200'
+                      : 'border-[#234F2A]/15 focus:border-[#D4AF37] focus:ring-[#D4AF37]/25'
+                      }`}
+                  />
+                  {errors.name && (
+                    <motion.p
+                      initial={{ opacity: 0, y: -5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="text-red-500 text-xs mt-1 font-medium pl-2"
+                    >
+                      {errors.name}
+                    </motion.p>
+                  )}
+                </div>
+
+                {/* Mobile Number */}
+                <div className="space-y-2">
+                  <Label htmlFor="phone" className="text-[#234F2A] font-medium flex items-center gap-2">
+                    <Phone className="w-4 h-4 text-[#D4AF37]" />
+                    Mobile Number
+                  </Label>
+                  <Input
+                    id="phone"
+                    type="tel"
+                    placeholder="Enter 10-digit mobile number"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    className={`border transition-all duration-300 rounded-[18px] h-12 bg-white/50 focus:bg-white text-base ${errors.phone
+                      ? 'border-red-500 focus:border-red-500 focus:ring-red-200'
+                      : 'border-[#234F2A]/15 focus:border-[#D4AF37] focus:ring-[#D4AF37]/25'
+                      }`}
+                  />
+                  {errors.phone && (
+                    <motion.p
+                      initial={{ opacity: 0, y: -5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="text-red-500 text-xs mt-1 font-medium pl-2"
+                    >
+                      {errors.phone}
+                    </motion.p>
+                  )}
+                </div>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-6">
+                {/* Customer Place */}
+                <div className="space-y-2">
+                  <Label htmlFor="place" className="text-[#234F2A] font-medium flex items-center gap-2">
+                    <MapPin className="w-4 h-4 text-[#D4AF37]" />
+                    Customer Place
+                  </Label>
+                  <Input
+                    id="place"
+                    type="text"
+                    placeholder="Enter your town/city"
+                    value={formData.place}
+                    onChange={(e) => setFormData({ ...formData, place: e.target.value })}
+                    className={`border transition-all duration-300 rounded-[18px] h-12 bg-white/50 focus:bg-white text-base ${errors.place
+                      ? 'border-red-500 focus:border-red-500 focus:ring-red-200'
+                      : 'border-[#234F2A]/15 focus:border-[#D4AF37] focus:ring-[#D4AF37]/25'
+                      }`}
+                  />
+                  {errors.place && (
+                    <motion.p
+                      initial={{ opacity: 0, y: -5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="text-red-500 text-xs mt-1 font-medium pl-2"
+                    >
+                      {errors.place}
+                    </motion.p>
+                  )}
+                </div>
+
+                {/* ID Proof */}
+                <div className="space-y-2">
+                  <Label htmlFor="idProof" className="text-[#234F2A] font-medium flex items-center gap-2">
+                    <IdCard className="w-4 h-4 text-[#D4AF37]" />
+                    ID Proof
+                  </Label>
+                  <Input
+                    id="idProof"
+                    type="text"
+                    placeholder="e.g., Aadhaar / Passport / Voter ID"
+                    value={formData.idProof}
+                    onChange={(e) => setFormData({ ...formData, idProof: e.target.value })}
+                    className={`border transition-all duration-300 rounded-[18px] h-12 bg-white/50 focus:bg-white text-base ${errors.idProof
+                      ? 'border-red-500 focus:border-red-500 focus:ring-red-200'
+                      : 'border-[#234F2A]/15 focus:border-[#D4AF37] focus:ring-[#D4AF37]/25'
+                      }`}
+                  />
+                  {errors.idProof && (
+                    <motion.p
+                      initial={{ opacity: 0, y: -5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="text-red-500 text-xs mt-1 font-medium pl-2"
+                    >
+                      {errors.idProof}
+                    </motion.p>
+                  )}
+                </div>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-6">
 
                 {/* Arrival Date */}
                 <div className="space-y-2">
@@ -220,8 +398,8 @@ Please contact me.`;
                     value={formData.arrival}
                     onChange={(e) => setFormData({ ...formData, arrival: e.target.value })}
                     className={`border transition-all duration-300 rounded-[18px] h-12 bg-white/50 focus:bg-white text-base ${errors.arrival
-                        ? 'border-red-500 focus:border-red-500 focus:ring-red-200'
-                        : 'border-[#234F2A]/15 focus:border-[#D4AF37] focus:ring-[#D4AF37]/25'
+                      ? 'border-red-500 focus:border-red-500 focus:ring-red-200'
+                      : 'border-[#234F2A]/15 focus:border-[#D4AF37] focus:ring-[#D4AF37]/25'
                       }`}
                   />
                   {errors.arrival && (
@@ -247,8 +425,8 @@ Please contact me.`;
                     value={formData.departure}
                     onChange={(e) => setFormData({ ...formData, departure: e.target.value })}
                     className={`border transition-all duration-300 rounded-[18px] h-12 bg-white/50 focus:bg-white text-base ${errors.departure
-                        ? 'border-red-500 focus:border-red-500 focus:ring-red-200'
-                        : 'border-[#234F2A]/15 focus:border-[#D4AF37] focus:ring-[#D4AF37]/25'
+                      ? 'border-red-500 focus:border-red-500 focus:ring-red-200'
+                      : 'border-[#234F2A]/15 focus:border-[#D4AF37] focus:ring-[#D4AF37]/25'
                       }`}
                   />
                   {errors.departure && (

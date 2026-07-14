@@ -41,8 +41,20 @@ export function ExperienceSection() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   return (
-    <section id="experience" ref={ref} className="py-24 md:py-32 bg-white relative overflow-x-hidden overflow-y-visible">
-      <div className="max-w-[1400px] mx-auto px-6 overflow-x-hidden overflow-y-visible">
+    <section id="experience" ref={ref} className="py-24 md:py-32 bg-white relative overflow-hidden">
+      {/* Scrollbar hiding styles */}
+      <style dangerouslySetInnerHTML={{
+        __html: `
+        .scrollbar-none::-webkit-scrollbar {
+          display: none;
+        }
+        .scrollbar-none {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}} />
+
+      <div className="max-w-[1400px] mx-auto px-6">
         <motion.div
           className="text-center mb-16"
           initial={{ opacity: 0, y: 30 }}
@@ -59,8 +71,8 @@ export function ExperienceSection() {
         </motion.div>
 
         {/* Layout stacks vertically on mobile (flex-col) and grid on desktop */}
-        <div className="flex flex-col md:grid md:grid-cols-2 gap-12 items-center overflow-x-hidden overflow-y-visible">
-          {/* Large Image - full width on mobile, aspect 4:3 on mobile, height 500-600px on desktop */}
+        <div className="flex flex-col md:grid md:grid-cols-2 gap-12 items-center">
+          {/* Large Image - responsive width 100%, aspect 4:3 on mobile, height 500-600px on desktop */}
           <motion.div
             className="relative w-full h-auto aspect-[4/3] md:h-[600px] md:aspect-auto overflow-hidden"
             style={{ borderRadius: '28px' }}
@@ -92,8 +104,8 @@ export function ExperienceSection() {
             ))}
           </div>
 
-          {/* Vertical Grid Cards (Mobile version) - 100% wide, no offsets, no negative margins */}
-          <div className="md:hidden flex flex-col gap-4 w-full px-1">
+          {/* Swipeable Snap Cards (Mobile version) */}
+          <div className="md:hidden flex gap-4 overflow-x-auto snap-x snap-mandatory py-6 px-6 scrollbar-none w-screen -mx-6">
             {experiences.map((experience, index) => (
               <MobileExperienceCard
                 key={index}
@@ -193,10 +205,10 @@ function ExperienceCard({ experience, index, isInView, isHovered, onHover, onLea
 function MobileExperienceCard({ experience, index }: { experience: typeof experiences[0]; index: number }) {
   return (
     <motion.div
-      className="w-full max-w-[480px] mx-auto cursor-pointer"
-      initial={{ opacity: 0, y: 20 }}
+      className="shrink-0 snap-center w-[82vw] cursor-pointer"
+      initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-50px' }}
+      viewport={{ once: true }}
       transition={{ duration: 0.5, delay: index * 0.08 }}
     >
       <div
