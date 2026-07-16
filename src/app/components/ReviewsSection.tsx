@@ -162,8 +162,7 @@ export function ReviewsSection() {
                   <div
                     className="w-full p-6 sm:p-10 select-none"
                     style={{
-                      background: 'rgba(255, 255, 255, 0.45)',
-                      backdropFilter: 'blur(20px)',
+                      background: 'rgba(255, 255, 255, 0.92)',
                       border: '1px solid rgba(255, 255, 255, 0.5)',
                       borderRadius: '24px',
                       boxShadow: '0 8px 32px rgba(0, 0, 0, 0.08)',

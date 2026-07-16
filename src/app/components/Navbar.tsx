@@ -7,6 +7,17 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
+  const [isMobile, setIsMobile] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      const matchMobile = window.matchMedia('(pointer: coarse)').matches || window.innerWidth < 768;
+      setIsMobile(matchMobile);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -79,9 +90,11 @@ export function Navbar() {
         transition={{ delay: 0.5, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         style={{
           background: scrolled
-            ? 'rgba(255, 255, 255, 0.85)'
-            : 'rgba(255, 255, 255, 0.25)',
-          backdropFilter: scrolled ? 'blur(20px)' : 'blur(4px)',
+            ? (isMobile ? 'rgba(255, 255, 255, 0.96)' : 'rgba(255, 255, 255, 0.85)')
+            : (isMobile ? 'rgba(255, 255, 255, 0.9)' : 'rgba(255, 255, 255, 0.25)'),
+          backdropFilter: isMobile
+            ? undefined
+            : (scrolled ? 'blur(20px)' : 'blur(4px)'),
           boxShadow: scrolled
             ? '0 10px 30px -10px rgba(0, 0, 0, 0.08)'
             : 'none',

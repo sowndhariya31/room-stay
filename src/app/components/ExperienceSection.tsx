@@ -212,9 +212,9 @@ function MobileExperienceCard({ experience, index }: { experience: typeof experi
       transition={{ duration: 0.5, delay: index * 0.08 }}
     >
       <div
-        className="p-6 backdrop-blur-lg"
+        className="p-6"
         style={{
-          background: 'rgba(255, 255, 255, 0.45)',
+          background: 'rgba(255, 255, 255, 0.92)',
           border: '1px solid rgba(255, 255, 255, 0.5)',
           borderRadius: '24px',
           boxShadow: '0 8px 32px rgba(0, 0, 0, 0.08)',

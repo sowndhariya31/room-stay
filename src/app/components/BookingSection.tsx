@@ -16,6 +16,17 @@ const roomTypeLabels: Record<string, string> = {
 export function BookingSection() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
+  const [isMobile, setIsMobile] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      const matchMobile = window.matchMedia('(pointer: coarse)').matches || window.innerWidth < 768;
+      setIsMobile(matchMobile);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -217,27 +228,29 @@ export function BookingSection() {
 
   return (
     <section id="booking" ref={ref} className="py-24 md:py-32 bg-white relative overflow-hidden">
-      {/* Animated Mountain Background and leaves */}
-      <div className="absolute inset-0 opacity-10">
-        <svg viewBox="0 0 1200 400" className="w-full h-full" preserveAspectRatio="none">
-          <motion.path
-            d="M0,400 L0,200 L200,100 L400,180 L600,60 L800,140 L1000,100 L1200,200 L1200,400 Z"
-            fill="#234F2A"
-            animate={{
-              d: [
-                'M0,400 L0,200 L200,100 L400,180 L600,60 L800,140 L1000,100 L1200,200 L1200,400 Z',
-                'M0,400 L0,220 L200,120 L400,200 L600,80 L800,160 L1000,120 L1200,220 L1200,400 Z',
-                'M0,400 L0,200 L200,100 L400,180 L600,60 L800,140 L1000,100 L1200,200 L1200,400 Z',
-              ],
-            }}
-            transition={{
-              duration: 10,
-              repeat: Infinity,
-              ease: 'easeInOut',
-            }}
-          />
-        </svg>
-      </div>
+      {/* Animated Mountain Background and leaves — Disabled on mobile/touch screens for performance */}
+      {(!isMobile) && (
+        <div className="absolute inset-0 opacity-10">
+          <svg viewBox="0 0 1200 400" className="w-full h-full" preserveAspectRatio="none">
+            <motion.path
+              d="M0,400 L0,200 L200,100 L400,180 L600,60 L800,140 L1000,100 L1200,200 L1200,400 Z"
+              fill="#234F2A"
+              animate={{
+                d: [
+                  'M0,400 L0,200 L200,100 L400,180 L600,60 L800,140 L1000,100 L1200,200 L1200,400 Z',
+                  'M0,400 L0,220 L200,120 L400,200 L600,80 L800,160 L1000,120 L1200,220 L1200,400 Z',
+                  'M0,400 L0,200 L200,100 L400,180 L600,60 L800,140 L1000,100 L1200,200 L1200,400 Z',
+                ],
+              }}
+              transition={{
+                duration: 10,
+                repeat: Infinity,
+                ease: 'easeInOut',
+              }}
+            />
+          </svg>
+        </div>
+      )}
 
       <div className="max-w-[1400px] mx-auto px-6 relative z-10">
         <motion.div
@@ -262,7 +275,8 @@ export function BookingSection() {
           transition={{ duration: 0.8, delay: 0.2 }}
         >
           <div
-            className="p-8 md:p-12 border border-white/40 shadow-2xl rounded-[28px] bg-white/70 backdrop-blur-xl"
+            className={`p-8 md:p-12 border border-white/40 shadow-2xl rounded-[28px] ${isMobile ? 'bg-white' : 'bg-white/70 backdrop-blur-xl'
+              }`}
             style={{
               boxShadow: '0 20px 50px -25px rgba(35, 79, 42, 0.15)',
             }}

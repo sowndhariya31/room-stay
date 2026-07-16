@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion } from 'motion/react';
 
 function TeaLeaf({ scale = 1 }: { scale?: number }) {
@@ -30,6 +30,22 @@ const leafData = Array.from({ length: 10 }, (_, i) => ({
 }));
 
 export function FloatingParticles() {
+  const [isMobile, setIsMobile] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      const matchMobile = window.matchMedia('(pointer: coarse)').matches || window.innerWidth < 768;
+      setIsMobile(matchMobile);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  if (isMobile === null || isMobile) {
+    return null; // Return null on mobile to disable background animations and loops
+  }
+
   return (
     <div className="fixed inset-0 pointer-events-none z-[2] overflow-hidden">
       {leafData.map((leaf) => (

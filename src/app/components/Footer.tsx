@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { motion, useInView } from 'motion/react';
 import { Mountain, Mail, Phone, MapPin, Facebook, Instagram, Twitter } from 'lucide-react';
 import { Button } from './ui/button';
@@ -29,6 +29,17 @@ const fireflies = Array.from({ length: FIREFLY_COUNT }, (_, i) => ({
 export function Footer() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true });
+  const [isMobile, setIsMobile] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      const matchMobile = window.matchMedia('(pointer: coarse)').matches || window.innerWidth < 768;
+      setIsMobile(matchMobile);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const scrollToSection = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
@@ -40,28 +51,30 @@ export function Footer() {
       className="relative overflow-hidden text-white"
       style={{ background: 'linear-gradient(to bottom, #050c06, #08120a)' }}
     >
-      {/* Animated stars */}
-      <div className="absolute inset-0 pointer-events-none">
-        {stars.map((star) => (
-          <motion.div
-            key={star.id}
-            className="absolute rounded-full bg-white"
-            style={{
-              left: `${star.x}%`,
-              top: `${star.y}%`,
-              width: star.size,
-              height: star.size,
-            }}
-            animate={{ opacity: [0.1, star.maxOpacity, 0.1] }}
-            transition={{
-              duration: star.duration,
-              delay: star.delay,
-              repeat: Infinity,
-              ease: 'easeInOut',
-            }}
-          />
-        ))}
-      </div>
+      {/* Animated stars — Disabled on mobile/touch screens for buttery smooth performance */}
+      {isMobile === false && (
+        <div className="absolute inset-0 pointer-events-none">
+          {stars.map((star) => (
+            <motion.div
+              key={star.id}
+              className="absolute rounded-full bg-white"
+              style={{
+                left: `${star.x}%`,
+                top: `${star.y}%`,
+                width: star.size,
+                height: star.size,
+              }}
+              animate={{ opacity: [0.1, star.maxOpacity, 0.1] }}
+              transition={{
+                duration: star.duration,
+                delay: star.delay,
+                repeat: Infinity,
+                ease: 'easeInOut',
+              }}
+            />
+          ))}
+        </div>
+      )}
 
       {/* Moon */}
       <div
@@ -77,8 +90,8 @@ export function Footer() {
         }}
       />
 
-      {/* Fireflies */}
-      {fireflies.map((fly) => (
+      {/* Fireflies — Disabled on mobile/touch screens for performance */}
+      {isMobile === false && fireflies.map((fly) => (
         <motion.div
           key={fly.id}
           className="absolute rounded-full pointer-events-none"

@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { motion, useInView } from 'motion/react';
 import { Wifi, Dumbbell, Coffee, Wind, Car, Utensils, Waves, Leaf } from 'lucide-react';
 
@@ -16,22 +16,35 @@ const amenities = [
 export function AmenitiesSection() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
+  const [isMobile, setIsMobile] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      const matchMobile = window.matchMedia('(pointer: coarse)').matches || window.innerWidth < 768;
+      setIsMobile(matchMobile);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   return (
     <section id="amenities" ref={ref} className="py-24 md:py-32 bg-[#FAFAF7] relative overflow-hidden">
-      {/* Background Pattern */}
-      <motion.div
-        className="absolute top-20 right-20 w-64 h-64 bg-[#5D8C58]/5 rounded-full blur-3xl"
-        animate={{
-          scale: [1, 1.3, 1],
-          opacity: [0.3, 0.5, 0.3],
-        }}
-        transition={{
-          duration: 8,
-          repeat: Infinity,
-          ease: 'easeInOut',
-        }}
-      />
+      {/* Background Pattern — Disabled on mobile to reduce rasterization load */}
+      {(!isMobile) && (
+        <motion.div
+          className="absolute top-20 right-20 w-64 h-64 bg-[#5D8C58]/5 rounded-full blur-3xl"
+          animate={{
+            scale: [1, 1.3, 1],
+            opacity: [0.3, 0.5, 0.3],
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: 'easeInOut',
+          }}
+        />
+      )}
 
       <div className="max-w-[1400px] mx-auto px-6">
         <motion.div
@@ -51,7 +64,7 @@ export function AmenitiesSection() {
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
           {amenities.map((amenity, index) => (
-            <AmenityCircle key={index} amenity={amenity} index={index} isInView={isInView} />
+            <AmenityCircle key={index} amenity={amenity} index={index} isInView={isInView} isMobile={isMobile} />
           ))}
         </div>
       </div>
@@ -63,9 +76,10 @@ interface AmenityCircleProps {
   amenity: typeof amenities[0];
   index: number;
   isInView: boolean;
+  isMobile: boolean | null;
 }
 
-function AmenityCircle({ amenity, index, isInView }: AmenityCircleProps) {
+function AmenityCircle({ amenity, index, isInView, isMobile }: AmenityCircleProps) {
   return (
     <motion.div
       className="flex flex-col items-center group cursor-pointer"
@@ -79,12 +93,12 @@ function AmenityCircle({ amenity, index, isInView }: AmenityCircleProps) {
       }}
       whileHover={{ y: -10 }}
     >
-      {/* Glass Circle */}
+      {/* Glass Circle / Solid Circle on Mobile */}
       <motion.div
         className="relative w-32 h-32 md:w-40 md:h-40 flex items-center justify-center mb-4"
         style={{
-          background: 'rgba(255, 255, 255, 0.18)',
-          backdropFilter: 'blur(20px)',
+          background: isMobile ? 'rgba(255, 255, 255, 0.92)' : 'rgba(255, 255, 255, 0.18)',
+          backdropFilter: isMobile ? undefined : 'blur(20px)',
           border: '1px solid rgba(255, 255, 255, 0.3)',
           borderRadius: '50%',
           boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12)',

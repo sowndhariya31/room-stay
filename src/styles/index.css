@@ -106,3 +106,20 @@ textarea,
 [contenteditable="true"] {
   cursor: text;
 }
+
+/* Fallback improvements and disabled backdrop filters on mobile for silky smooth performance */
+@media (max-width: 767px) {
+
+  /* Disable heavy graphics card operations */
+  *,
+  *::before,
+  *::after {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* Treat glass components nicely so they have solid background since blur is disabled */
+  .glass {
+    background: rgba(255, 255, 255, 0.94) !important;
+  }
+}

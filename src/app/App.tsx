@@ -24,9 +24,13 @@ function App() {
     document.body.style.overflow = isLoading ? 'hidden' : '';
   }, [isLoading]);
 
-  // Lenis smooth scroll — starts after loading completes
+  // Lenis smooth scroll — starts after loading completes on desktop screens only
   useEffect(() => {
     if (isLoading) return;
+
+    // Disable smooth scroll library on touch/mobile devices to prevent gesture lag
+    const isMobileDevice = window.matchMedia('(pointer: coarse)').matches || window.innerWidth < 768;
+    if (isMobileDevice) return;
 
     const lenis = new Lenis({
       duration: 1.4,
