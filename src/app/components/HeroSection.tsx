@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion, useScroll, useTransform } from 'motion/react';
 import gsap from 'gsap';
 import { Button } from './ui/button';
@@ -50,6 +50,17 @@ export function HeroSection() {
   const subtitleOuterRef = useRef<HTMLDivElement>(null);
   const ctaOuterRef = useRef<HTMLDivElement>(null);
   const leavesContainerRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      const matchMobile = window.matchMedia('(pointer: coarse)').matches || window.innerWidth < 768;
+      setIsMobile(matchMobile);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const { scrollY } = useScroll();
   const contentOpacity = useTransform(scrollY, [0, 400], [1, 0]);
@@ -89,6 +100,10 @@ export function HeroSection() {
       }, '-=0.5');
     }
 
+    // Skip continuous slow leaves animation loop on mobile viewports for performance
+    const isMobileDevice = window.matchMedia('(pointer: coarse)').matches || window.innerWidth < 768;
+    if (isMobileDevice) return;
+
     // GSAP slow leaves floating motion loops
     if (leavesContainerRef.current) {
       const items = leavesContainerRef.current.children;
@@ -124,28 +139,30 @@ export function HeroSection() {
           }}
         />
       </div>
-      {/* Floating leaves with GSAP loops */}
-      <motion.div
-        ref={leavesContainerRef}
-        className="absolute inset-0 pointer-events-none z-20"
-        style={{ y: leafScrollY }}
-      >
-        {leafClusters.map((cluster) => (
-          <div
-            key={cluster.id}
-            className="absolute"
-            style={{
-              left: cluster.left,
-              top: cluster.top,
-              width: cluster.width,
-              transform: `rotate(${cluster.rotation}deg)`,
-              filter: 'drop-shadow(0 8px 16px rgba(0,0,0,0.15))',
-            }}
-          >
-            <TeaLeaf className="w-full h-auto" />
-          </div>
-        ))}
-      </motion.div>
+      {/* Floating leaves with GSAP loops — Disabled on mobile/touch screens for graphics optimization */}
+      {isMobile === false && (
+        <motion.div
+          ref={leavesContainerRef}
+          className="absolute inset-0 pointer-events-none z-20"
+          style={{ y: leafScrollY }}
+        >
+          {leafClusters.map((cluster) => (
+            <div
+              key={cluster.id}
+              className="absolute"
+              style={{
+                left: cluster.left,
+                top: cluster.top,
+                width: cluster.width,
+                transform: `rotate(${cluster.rotation}deg)`,
+                filter: 'drop-shadow(0 8px 16px rgba(0,0,0,0.15))',
+              }}
+            >
+              <TeaLeaf className="w-full h-auto" />
+            </div>
+          ))}
+        </motion.div>
+      )}
 
       {/* Main Content Area */}
       <motion.div
